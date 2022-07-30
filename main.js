@@ -63,7 +63,24 @@ NumberOfAllQuestions.innerHTML = questions.length; // output the number of quest
 
 const load = () => {
     question.innerHTML = questions[0].question; // question
+
+    // mapping all the answers
+    option1.innerHTML = questions[indexOfQuestion].options[0];
+    option2.innerHTML = questions[indexOfQuestion].options[1];
+    option3.innerHTML = questions[indexOfQuestion].options[2];
+    option4.innerHTML = questions[indexOfQuestion].options[3];
+
+    NumberOfQuestion.innerHTML = indexOfPage + 1; // setting the current page number
+    indexOfPage++; //page index increase
+};
+
+let completedAnswers = [] // array for questions already asked
+
+const randomQuestion = () => {
+    let randomNumber = Math.floor(Math.random() * questions.length);
 }
+
+    randomQuestion();
 
 window.addEventListener('load', () => {
     load();
