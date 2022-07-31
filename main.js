@@ -1,8 +1,8 @@
 // Все варианты ответов
-const option1 = document.querySelector('.option1'),
-      option2 = document.querySelector('.option2'),
-      option3 = document.querySelector('.option3'),
-      option4 = document.querySelector('.option4');
+const option1= document.querySelector('.option1'),
+      option2= document.querySelector('.option2'),
+      option3= document.querySelector('.option3'),
+      option4= document.querySelector('.option4');
 
 // Все наши ответы
 const optionElements = document.querySelectorAll('.option');
@@ -21,37 +21,41 @@ const btnNext = document.getElementById('btn-next'); // кнопка далее
 let score = 0; // итоговый результат викторины
 
 const correctAnswer = document.getElementById('correct-answer'), // количество правильных ответов
-    numberOfAllQuestions2 = document.getElementById('number-of-all-questions-2'), // количество правильных ответов (в модальном окне)
-    btnTryAgain = document.getElementById('btn-try-again'); // кнопка повторного запуска
+      numberOfAllQuestions2 = document.getElementById('number-of-all-questions-2'), // количество правильных ответов (в модальном окне)
+      btnTryAgain = document.getElementById('btn-try-again'); // кнопка повторного запуска
+
+const quizOverModal = document.querySelector('.quiz-over-modal');
+
+const result = document.getElementById('result');
 
 const questions = [
     {
-        question: 'Как в JavaScript вычислить процент от числа ?',
-        option: [
-            'Так в JavaScript нельзя сделать',
-            'Оператор : %',
-            'Умножить на кол-во процентов и разделить на 100',
-            'Вызвать метод FindPrecent()',
+        question: 'Что такое виртуальная DOM?',
+        options: [
+            'Точная HTML-копия реальной DOM',
+            'Встроенный компонент браузера',
+            'Объект JavaScript, содержащий элементы и данные',
+            'Строка JSON, содержащая элементы и данные, возвращаемые из метода react.render',
         ],
         rightAnswer: 2
     },
     {
-        question: 'Результат выражения: "13" + 7',
-        option: [
-            '20',
-            '137',
+        question: 'Какое из перечисленных ниже слов не является зарезервированным словом в JavaScript?',
+        options: [
             'undefined',
-            'error',
+            'throw',
+            'default',
+            'finally',
         ],
-        rightAnswer: 1
+        rightAnswer: 0
     },
     {
-        question: 'На JavaScript нельзя писать',
-        option: [
-            'Игры',
-            'Скрипты для сайтов',
-            'Десктопные приложения',
-            'Плохо',
+        question: 'К какому типу относится значение null?',
+        options: [
+            'К символьному',
+            'К строковому',
+            'К логическому',
+            'Ни к одному из перечисленных',
         ],
         rightAnswer: 3
     }
@@ -62,7 +66,6 @@ numberOfAllQuestions.innerHTML = questions.length; // вывод количес�
 const load = () => {
     question.innerHTML = questions[indexOfQuestion].question; // сам вопрос
 
-    // мапинг всех ответов
     option1.innerHTML = questions[indexOfQuestion].options[0];
     option2.innerHTML = questions[indexOfQuestion].options[1];
     option3.innerHTML = questions[indexOfQuestion].options[2];
@@ -79,27 +82,28 @@ const randomQuestion = () => {
     let hitDuplicate = false; // якорь для проверки тех же вопросов
 
     if(indexOfPage == questions.length) {
-        quizOver()
+        quizOver();
     } else {
-        if(completedAnswers.length > 0) {
+        if(completedAnswers.length > 0){
             completedAnswers.forEach(item => {
-                if(item == randomNumber) {
+                if(item == randomNumber){
                     hitDuplicate = true;
                 }
             });
-            if(hitDuplicate) {
+            if(hitDuplicate){
                 randomQuestion();
-            }else {
+            } else {
                 indexOfQuestion = randomNumber;
                 load();
             }
         }
         if(completedAnswers.length == 0) {
             indexOfQuestion = randomNumber;
-            load(); 
-        }
+            load();
+        }   
     }
-    completedAnswers.push(indexOfQuestion);
+    console.log(indexOfQuestion);
+    completedAnswers.push(indexOfQuestion);  //добавляем элемент в массив
 };
 
 const checkAnswer = el => {
@@ -112,11 +116,7 @@ const checkAnswer = el => {
         updateAnswerTracker('wrong');
     }
     disabledOptions();
-}
-
-for(option of optionElements) {
-    option.addEventListener('click' ,  e => checkAnswer(e));
-}
+};
 
 const disabledOptions = () => {
     optionElements.forEach(item => {
@@ -124,52 +124,65 @@ const disabledOptions = () => {
         if(item.dataset.id == questions[indexOfQuestion].rightAnswer) {
             item.classList.add('correct');
         }
-    })
-}
+    });
+};
 // удаление всех классов со всех ответов
-const enableOptions = () => {
+const enabledOptions = () => {
     optionElements.forEach(item => {
         item.classList.remove('disabled', 'correct', 'wrong');
-    })
+        });
+};
+
+const updateAnswerTracker = status => {
+    answersTracker.children[indexOfPage - 1].classList.add(`${status}`);
+};
+
+const validate = () => {
+    if(!optionElements[0].classList.contains('disabled')) {
+        alert('Вам нужно выбрать один из вариантов ответа.')
+    } else {
+        randomQuestion();
+        enabledOptions();
+    }
+
 };
 
 const answerTracker = () => {
     questions.forEach(() => {
         const div = document.createElement('div');
         answersTracker.appendChild(div);
-    })
+    });
 };
 
-const updateAnswerTracker = status => {
-    answersTracker.children[indexOfPage - 1].classList.add(`${status}`);
-}
-
-const validate = () => {
-    if(!optionElements[0].classList.contains('disabled')) {
-        alert('Вам нужно выбрать один из вариантов ответа');
-    } else {
-        randomQuestion();
-        enableOptions();
-    }
-}
+for(option of optionElements){
+    option.addEventListener('click', e => checkAnswer(e));
+};
 
 const quizOver = () => {
-    document.querySelector('.quiz-over-modal').classList.add('active');
+    if(score == 0){
+        result.innerHTML = 'Не получилось! Попробуй снова!'
+    } else {
+        result.innerHTML = 'Отличный результат!'
+    }
+    quizOverModal.classList.add('active');
     correctAnswer.innerHTML = score;
     numberOfAllQuestions2.innerHTML = questions.length;
 };
 
 const tryAgain = () => {
-    window.location.reload();
-}
+    window.location.reload(); // перезагрузка
+};
 
 btnTryAgain.addEventListener('click', tryAgain);
-
 btnNext.addEventListener('click', () => {
     validate();
-})
+});
 
-window.addEventListener('load', () => {
+//вызов функции, если страница прогрузилась
+window.addEventListener('load', () => { 
     randomQuestion();
     answerTracker();
-});
+}); 
+
+
+
