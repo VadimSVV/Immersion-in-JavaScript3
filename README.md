@@ -1,1 +1,1 @@
-http://VadimSVV.github.io/Immersion-in-JavaScript/
+https://VadimSVV.github.io/Immersion-in-JavaScript3/
