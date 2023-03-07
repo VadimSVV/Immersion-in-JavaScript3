@@ -1,4 +1,4 @@
 Викторина
 
-Запустить:
-https://VadimSVV.github.io/Immersion-in-JavaScript3/
+<a href="https://VadimSVV.github.io/Immersion-in-JavaScript3" target="_blank">Запустить</a>
+
